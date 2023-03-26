@@ -1,44 +1,49 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
+import Navbar from './Components/Navbar';
+import Form from './Components/Form';
+import Notes from './Components/Notes';
+import Editmodel from './Components/Editmodel';
 
 const App = () => {
-  const [input,setInput] = useState('')
-  const [result,setResult] = useState(0)
-  const changeHandler = e => {
-    setInput(e.target.value)
-  }
-const clickHandler = () =>{
-  setResult(eval(input))
-   setInput('')
-}
+  const [notes,setNotes] = useState('')
+  const [editid,setEditid] = useState('')
+  localStorage.setItem("notes",JSON.stringify(notes))
   return (
     <div>
-      <h1>Caluculator App</h1>
-      <input type="text" value={input} name="input" onChange={changeHandler} />
-      <br/>
-      <button onClick={clickHandler}> Result </button>
-      
-      <h4> Result is {result}</h4>
-      <button onClick={()=> setInput(input + '1')}>1</button>
-      <button onClick={()=> setInput(input + '2')}>2</button>
-      <button onClick={()=> setInput(input + '3')}>3</button>
-      <button onClick={()=> setInput(input + '4')}>4</button>
-      <button onClick={()=> setInput(input + '5')}>5</button> <br/>
-      <button onClick={()=> setInput(input + '6')}>6</button>
-      <button onClick={()=> setInput(input + '7')}>7</button>
-      <button onClick={()=> setInput(input + '8')}>8</button>
-      <button onClick={()=> setInput(input + '9')}>9</button>
-      <button onClick={()=> setInput(input + '0')}>0</button> <br/>
-
-      <button onClick={()=> setInput(input + '+')}>+</button>
-      <button onClick={()=> setInput(input + '-')}>-</button>
-      <button onClick={()=> setInput(input + '*')}>*</button>
-      <button onClick={()=> setInput(input + '/')}>/</button>
-      <button onClick={()=> setInput('')}>Clr</button>
-
+    <Editmodel  editid={editid}/>
+      <Navbar />
+      <Form  notes={notes} setNotes={setNotes}/>
+      <div className='container'>
+        <div className='row justify-content-center'>
+          <div className='col-md-10'>
+          <h1 className='mb-3'>Your Notes</h1>
+          {notes.length == 0 ? 
+             <div class="card">
+            <div class="card-body">
+                    <h5 class="card-title">Message: </h5>
+                    <p class="card-text">No Notes Avilable</p>
+                    </div>
+                </div>
+                 : notes.map((element) =>{
+                  return(
+                    <Notes  element={element} key={element.id} notes={notes} setNotes={setNotes} setEditid={setEditid}
+                    />
+                  )
+                })}
+          
+          </div>
+        </div>
+      </div>
     </div>
-    
   )
+  function getNotesFromLs(){
+    const note = JSON.parse(localStorage.getItem("notes"))
+    if(note) {
+      return note  
+    } else {
+      return []
+    }
+  }
 }
 
 export default App
-
